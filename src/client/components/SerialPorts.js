@@ -4,7 +4,7 @@ import FetchSerialPortsError from './FetchSerialPortsError';
 import FetchingSerialPorts from './FetchingSerialPorts';
 import SerialPort from './SerialPort';
 
-const SerialPorts = ({serialPorts}) => {
+const SerialPorts = ({serialPorts, onStatus, onResize}) => {
   if (!_.isUndefined(serialPorts.error)) {
     return (
       <FetchSerialPortsError error={serialPorts.error} />
@@ -17,6 +17,8 @@ const SerialPorts = ({serialPorts}) => {
             key={name}
             name={name}
             properties={properties}
+            onStatus={onStatus.bind(null, name)}
+            onResize={onResize.bind(null, name)}
           />
         )}
       </div>

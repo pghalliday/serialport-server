@@ -24633,6 +24633,8 @@
 
 	var _SerialPorts2 = _interopRequireDefault(_SerialPorts);
 
+	var _actions = __webpack_require__(24);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mapStateToProps = function mapStateToProps(state) {
@@ -24641,7 +24643,18 @@
 	  };
 	};
 
-	var SerialPortsContainer = (0, _reactRedux.connect)(mapStateToProps)(_SerialPorts2.default);
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+	  return {
+	    onStatus: function onStatus(name, status) {
+	      dispatch((0, _actions.updateStatus)(name, status));
+	    },
+	    onResize: function onResize(name, columns, rows) {
+	      dispatch((0, _actions.updateSize)(name, columns, rows));
+	    }
+	  };
+	};
+
+	var SerialPortsContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_SerialPorts2.default);
 
 	exports.default = SerialPortsContainer;
 
@@ -24679,6 +24692,8 @@
 
 	var SerialPorts = function SerialPorts(_ref) {
 	  var serialPorts = _ref.serialPorts;
+	  var onStatus = _ref.onStatus;
+	  var onResize = _ref.onResize;
 
 	  if (!_lodash2.default.isUndefined(serialPorts.error)) {
 	    return _react2.default.createElement(_FetchSerialPortsError2.default, { error: serialPorts.error });
@@ -24690,7 +24705,9 @@
 	        return _react2.default.createElement(_SerialPort2.default, {
 	          key: name,
 	          name: name,
-	          properties: properties
+	          properties: properties,
+	          onStatus: onStatus.bind(null, name),
+	          onResize: onResize.bind(null, name)
 	        });
 	      })
 	    );
@@ -41782,15 +41799,17 @@
 
 	var _Status2 = _interopRequireDefault(_Status);
 
-	var _TerminalContainer = __webpack_require__(219);
+	var _Terminal = __webpack_require__(220);
 
-	var _TerminalContainer2 = _interopRequireDefault(_TerminalContainer);
+	var _Terminal2 = _interopRequireDefault(_Terminal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SerialPort = function SerialPort(_ref) {
 	  var name = _ref.name;
 	  var properties = _ref.properties;
+	  var onStatus = _ref.onStatus;
+	  var onResize = _ref.onResize;
 	  return _react2.default.createElement(
 	    'div',
 	    null,
@@ -41798,7 +41817,11 @@
 	    _react2.default.createElement(_CaptureFile2.default, { captureFile: properties.captureFile }),
 	    _react2.default.createElement(_Status2.default, { status: properties.status }),
 	    _react2.default.createElement(_Size2.default, { size: properties.size }),
-	    _react2.default.createElement(_TerminalContainer2.default, { name: name, socket: properties.socket })
+	    _react2.default.createElement(_Terminal2.default, {
+	      socket: properties.socket,
+	      onStatus: onStatus,
+	      onResize: onResize
+	    })
 	  );
 	};
 
@@ -41834,51 +41857,7 @@
 	exports.default = Status;
 
 /***/ },
-/* 219 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(28);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(198);
-
-	var _Terminal = __webpack_require__(220);
-
-	var _Terminal2 = _interopRequireDefault(_Terminal);
-
-	var _actions = __webpack_require__(24);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state, ownProps) {
-	  return {
-	    socket: ownProps.socket
-	  };
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
-	  return {
-	    onStatus: function onStatus(status) {
-	      dispatch((0, _actions.updateStatus)(ownProps.name, status));
-	    },
-	    onResize: function onResize(columns, rows) {
-	      dispatch((0, _actions.updateSize)(ownProps.name, columns, rows));
-	    }
-	  };
-	};
-
-	var TerminalContainer = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_Terminal2.default);
-
-	exports.default = TerminalContainer;
-
-/***/ },
+/* 219 */,
 /* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
