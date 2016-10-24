@@ -18,32 +18,35 @@ function serialPorts(state = {}, action) {
       return {};
     case RECEIVE_SERIALPORTS:
       return {
-        properties: action.serialPorts,
-        sizes: _.mapValues(action.serialPorts, () => {
-          return {
-            columns: 0,
-            rows: 0
-          };
-        }),
-        statuses: _.mapValues(action.serialPorts, () => {
-          return {
-            status: 'waitingOnSocket'
-          };
+        properties: _.mapValues(action.serialPorts, properties => {
+          return Object.assign({}, properties, {
+            status: {
+              status: 'waitingOnSocket'
+            },
+            size: {
+              columns: 0,
+              rows: 0
+            }
+          });
         })
       };
     case UPDATE_STATUS:
       return Object.assign({}, state, {
-        statuses: Object.assign({}, state.statuses, {
-          [action.name]: action.status
+        properties: Object.assign({}, state.properties, {
+          [action.name]: Object.assign({}, state.properties[action.name], {
+            status: action.status
+          })
         })
       });
     case UPDATE_SIZE:
       return Object.assign({}, state, {
-        sizes: Object.assign({}, state.sizes, {
-          [action.name]: {
-            columns: action.columns,
-            rows: action.rows
-          }
+        properties: Object.assign({}, state.properties, {
+          [action.name]: Object.assign({}, state.properties[action.name], {
+            size: {
+              columns: action.columns,
+              rows: action.rows
+            }
+          })
         })
       });
     default:

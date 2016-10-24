@@ -2598,29 +2598,32 @@
 	      return {};
 	    case _actions.RECEIVE_SERIALPORTS:
 	      return {
-	        properties: action.serialPorts,
-	        sizes: _.mapValues(action.serialPorts, function () {
-	          return {
-	            columns: 0,
-	            rows: 0
-	          };
-	        }),
-	        statuses: _.mapValues(action.serialPorts, function () {
-	          return {
-	            status: 'waitingOnSocket'
-	          };
+	        properties: _.mapValues(action.serialPorts, function (properties) {
+	          return Object.assign({}, properties, {
+	            status: {
+	              status: 'waitingOnSocket'
+	            },
+	            size: {
+	              columns: 0,
+	              rows: 0
+	            }
+	          });
 	        })
 	      };
 	    case _actions.UPDATE_STATUS:
 	      return Object.assign({}, state, {
-	        statuses: Object.assign({}, state.statuses, _defineProperty({}, action.name, action.status))
+	        properties: Object.assign({}, state.properties, _defineProperty({}, action.name, Object.assign({}, state.properties[action.name], {
+	          status: action.status
+	        })))
 	      });
 	    case _actions.UPDATE_SIZE:
 	      return Object.assign({}, state, {
-	        sizes: Object.assign({}, state.sizes, _defineProperty({}, action.name, {
-	          columns: action.columns,
-	          rows: action.rows
-	        }))
+	        properties: Object.assign({}, state.properties, _defineProperty({}, action.name, Object.assign({}, state.properties[action.name], {
+	          size: {
+	            columns: action.columns,
+	            rows: action.rows
+	          }
+	        })))
 	      });
 	    default:
 	      return state;
@@ -24686,9 +24689,8 @@
 	      _lodash2.default.map(serialPorts.properties, function (properties, name) {
 	        return _react2.default.createElement(_SerialPort2.default, {
 	          key: name,
-	          socket: properties.socket,
-	          capturefile: properties.capturefile,
-	          name: name
+	          name: name,
+	          properties: properties
 	        });
 	      })
 	    );
@@ -41764,13 +41766,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SerialPortHeader = __webpack_require__(216);
+	var _Name = __webpack_require__(275);
 
-	var _SerialPortHeader2 = _interopRequireDefault(_SerialPortHeader);
+	var _Name2 = _interopRequireDefault(_Name);
 
-	var _StatusContainer = __webpack_require__(217);
+	var _CaptureFile = __webpack_require__(274);
 
-	var _StatusContainer2 = _interopRequireDefault(_StatusContainer);
+	var _CaptureFile2 = _interopRequireDefault(_CaptureFile);
+
+	var _Size = __webpack_require__(273);
+
+	var _Size2 = _interopRequireDefault(_Size);
+
+	var _Status = __webpack_require__(218);
+
+	var _Status2 = _interopRequireDefault(_Status);
 
 	var _TerminalContainer = __webpack_require__(219);
 
@@ -41780,90 +41790,23 @@
 
 	var SerialPort = function SerialPort(_ref) {
 	  var name = _ref.name;
-	  var socket = _ref.socket;
-	  var capturefile = _ref.capturefile;
+	  var properties = _ref.properties;
 	  return _react2.default.createElement(
 	    'div',
 	    null,
-	    _react2.default.createElement(_SerialPortHeader2.default, { name: name, capturefile: capturefile }),
-	    _react2.default.createElement(_StatusContainer2.default, { name: name }),
-	    _react2.default.createElement(_TerminalContainer2.default, { name: name, socket: socket })
+	    _react2.default.createElement(_Name2.default, { name: name }),
+	    _react2.default.createElement(_CaptureFile2.default, { captureFile: properties.captureFile }),
+	    _react2.default.createElement(_Status2.default, { status: properties.status }),
+	    _react2.default.createElement(_Size2.default, { size: properties.size }),
+	    _react2.default.createElement(_TerminalContainer2.default, { name: name, socket: properties.socket })
 	  );
 	};
 
 	exports.default = SerialPort;
 
 /***/ },
-/* 216 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(28);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SerialPortHeader = function SerialPortHeader(_ref) {
-	  var name = _ref.name;
-	  var capturefile = _ref.capturefile;
-	  return _react2.default.createElement(
-	    'div',
-	    null,
-	    _react2.default.createElement(
-	      'h1',
-	      null,
-	      name
-	    ),
-	    _react2.default.createElement(
-	      'a',
-	      { href: capturefile },
-	      'download capture file'
-	    )
-	  );
-	};
-
-	exports.default = SerialPortHeader;
-
-/***/ },
-/* 217 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(28);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(198);
-
-	var _Status = __webpack_require__(218);
-
-	var _Status2 = _interopRequireDefault(_Status);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state, ownProps) {
-	  return {
-	    status: state.serialPorts.statuses[ownProps.name],
-	    size: state.serialPorts.sizes[ownProps.name]
-	  };
-	};
-
-	var StatusContainer = (0, _reactRedux.connect)(mapStateToProps)(_Status2.default);
-
-	exports.default = StatusContainer;
-
-/***/ },
+/* 216 */,
+/* 217 */,
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -41881,20 +41824,10 @@
 
 	var Status = function Status(_ref) {
 	  var status = _ref.status;
-	  var size = _ref.size;
 	  return _react2.default.createElement(
-	    'div',
+	    'p',
 	    null,
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      JSON.stringify(status)
-	    ),
-	    _react2.default.createElement(
-	      'p',
-	      null,
-	      JSON.stringify(size)
-	    )
+	    JSON.stringify(status)
 	  );
 	};
 
@@ -66813,6 +66746,88 @@
 	function ab2str(buf) {
 	  return String.fromCharCode.apply(null, new Uint8Array(buf));
 	}
+
+/***/ },
+/* 272 */,
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(28);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Size = function Size(_ref) {
+	  var size = _ref.size;
+	  return _react2.default.createElement(
+	    'p',
+	    null,
+	    JSON.stringify(size)
+	  );
+	};
+
+	exports.default = Size;
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(28);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CaptureFile = function CaptureFile(_ref) {
+	  var capturefile = _ref.capturefile;
+	  return _react2.default.createElement(
+	    'a',
+	    { href: capturefile },
+	    'download capture file'
+	  );
+	};
+
+	exports.default = CaptureFile;
+
+/***/ },
+/* 275 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(28);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Name = function Name(_ref) {
+	  var name = _ref.name;
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    name
+	  );
+	};
+
+	exports.default = Name;
 
 /***/ }
 /******/ ]);

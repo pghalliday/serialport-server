@@ -1,13 +1,17 @@
 import React from 'react';
-import SerialPortHeader from './SerialPortHeader';
-import StatusContainer from '../containers/StatusContainer';
+import Name from './Name';
+import CaptureFile from './CaptureFile';
+import Size from './Size';
+import Status from './Status';
 import TerminalContainer from '../containers/TerminalContainer';
 
-const SerialPort = ({name, socket, capturefile}) => (
+const SerialPort = ({name, properties}) => (
   <div>
-    <SerialPortHeader name={name} capturefile={capturefile} />
-    <StatusContainer name={name} />
-    <TerminalContainer name={name} socket={socket} />
+    <Name name={name} />
+    <CaptureFile captureFile={properties.captureFile} />
+    <Status status={properties.status} />
+    <Size size={properties.size} />
+    <TerminalContainer name={name} socket={properties.socket} />
   </div>
 );
 

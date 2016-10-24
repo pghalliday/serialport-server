@@ -15,9 +15,8 @@ const SerialPorts = ({serialPorts}) => {
         {_.map(serialPorts.properties, (properties, name) =>
           <SerialPort
             key={name}
-            socket={properties.socket}
-            capturefile={properties.capturefile}
             name={name}
+            properties={properties}
           />
         )}
       </div>

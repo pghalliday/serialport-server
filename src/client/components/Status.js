@@ -1,14 +1,9 @@
 import React from 'react';
 
-const Status = ({status, size}) => (
-  <div>
-    <p>
-      {JSON.stringify(status)}
-    </p>
-    <p>
-      {JSON.stringify(size)}
-    </p>
-  </div>
+const Status = ({status}) => (
+  <p>
+    {JSON.stringify(status)}
+  </p>
 );
 
 export default Status;
