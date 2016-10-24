@@ -41858,7 +41858,7 @@
 /* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -41873,9 +41873,9 @@
 	var CaptureFile = function CaptureFile(_ref) {
 	  var captureFile = _ref.captureFile;
 	  return _react2.default.createElement(
-	    'a',
-	    { href: captureFile },
-	    'capture file'
+	    "a",
+	    { href: captureFile, target: "_blank" },
+	    "capture file"
 	  );
 	};
 
