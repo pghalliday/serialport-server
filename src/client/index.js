@@ -8,6 +8,7 @@ import {render} from'react-dom';
 import {Provider} from 'react-redux';
 import App from './components/App';
 import {hterm, lib} from 'hterm-umdjs';
+import {Router, Route, browserHistory} from 'react-router';
 
 const loggerMiddleware = createLogger();
 
@@ -25,7 +26,10 @@ store.dispatch(fetchSerialPorts());
 
 render(
   <Provider store={store}>
-    <App />
+		<Router history={browserHistory}>
+      <Route path="/" component={App} />
+      <Route path="/serialports/(:name)" component={App} />
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

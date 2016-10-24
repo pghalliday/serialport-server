@@ -3,10 +3,10 @@ import Header from './Header';
 import Footer from './Footer';
 import SerialPortsContainer from '../containers/SerialPortsContainer';
 
-const App = () => (
+const App = ({params}) => (
   <div>
     <Header />
-    <SerialPortsContainer />
+    <SerialPortsContainer activeSerialPort={params.name}/>
     <Footer />
   </div>
 );

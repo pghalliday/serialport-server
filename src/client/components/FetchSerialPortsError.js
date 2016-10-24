@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const FetchSerialPortsError = ({error}) => (
   <div>
@@ -10,5 +10,12 @@ const FetchSerialPortsError = ({error}) => (
     </p>
   </div>
 );
+
+FetchSerialPortsError.propTypes = {
+  error: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
+};
 
 export default FetchSerialPortsError;

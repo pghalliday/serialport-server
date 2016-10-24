@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Component} from 'react';
 import io from 'socket.io-client';
 import {hterm} from 'hterm-umdjs';
@@ -33,5 +33,11 @@ class Terminal extends Component {
     );
   }
 }
+
+Terminal.propTypes = {
+  socket: PropTypes.string.isRequired,
+  onStatus: PropTypes.func.isRequired,
+  onResize: PropTypes.func.isRequired
+};
 
 export default Terminal;

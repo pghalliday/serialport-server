@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import SerialPorts from '../components/SerialPorts';
 import {updateStatus, updateSize} from '../actions';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    serialPorts: state.serialPorts
+    serialPorts: state.serialPorts,
+    activeSerialPort: ownProps.activeSerialPort
   }
 };
 

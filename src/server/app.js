@@ -4,6 +4,10 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 
+const staticDir = path.resolve(__dirname, '..', 'static');
+const indexHtml = path.join(staticDir, 'index.html');
+const indexJs = path.join(staticDir, 'index.js');
+
 function promiseCallback(resolve, reject) {
   return function(error, value) {
     if (error) {
@@ -19,7 +23,7 @@ class App {
     this.logger = config.logger;
     const app = express();
     this.server = new http.Server(app);
-    app.use(express.static('src/static'));
+    app.use('/js', express.static('src/static/js'));
     app.get(config.serialPorts.route, (req, res) => {
       const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
       const separator = fullUrl.endsWith('/') ? '' : '/';
@@ -36,6 +40,9 @@ class App {
         res.sendFile(path.resolve(config.captureDirectory, `${name}.log`));
       });
     });
+		app.get('/*', (req,res) => {
+			res.sendFile(indexHtml);
+		});
   }
 
   listen(port) {
