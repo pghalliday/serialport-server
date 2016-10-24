@@ -9,7 +9,7 @@ class SerialPorts {
     this.serialPorts = _.map(config.serialPorts, (options, name) => {
       const ioSerialPort = new IOSerialPort({
         io: config.io,
-        path: `${config.route}/${name}`,
+        path: `${config.route}/${name}/socket`,
         device: options.device,
         baudrate: options.baudrate,
         retryPeriod: options.retryPeriod,

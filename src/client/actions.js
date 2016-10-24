@@ -36,3 +36,22 @@ export function fetchSerialPorts() {
     });
   };
 }
+
+export const UPDATE_STATUS = 'UPDATE_STATUS';
+export function updateStatus(name, status) {
+  return {
+    type: UPDATE_STATUS,
+    name: name,
+    status: status
+  };
+}
+
+export const UPDATE_SIZE = 'UPDATE_SIZE';
+export function updateSize(name, columns, rows) {
+  return {
+    type: UPDATE_SIZE,
+    name: name,
+    columns: columns,
+    rows: rows
+  };
+}

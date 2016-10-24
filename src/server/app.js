@@ -2,6 +2,7 @@
 
 const express = require('express');
 const http = require('http');
+const path = require('path');
 
 function promiseCallback(resolve, reject) {
   return function(error, value) {
@@ -19,14 +20,21 @@ class App {
     const app = express();
     this.server = new http.Server(app);
     app.use(express.static('src/static'));
-    app.use(config.capture.route, express.static(config.capture.directory));
     app.get(config.serialPorts.route, (req, res) => {
       const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
       const separator = fullUrl.endsWith('/') ? '' : '/';
       res.json(config.serialPorts.names.reduce((memo, name) => {
-        memo[name] = fullUrl + separator + name;
+        memo[name] = {
+          socket: fullUrl + separator + name + '/socket',
+          capturefile: fullUrl + separator + name + '/capturefile'
+        };
         return memo;
       }, {}));
+    });
+    config.serialPorts.names.forEach(name => {
+      app.get(config.serialPorts.route + `/${name}/capturefile`, (req, res) => {
+        res.sendFile(path.resolve(config.captureDirectory, `${name}.cap`));
+      });
     });
   }
 

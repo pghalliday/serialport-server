@@ -7,7 +7,6 @@ const App = require('./app');
 const SerialPorts = require('./serial-ports');
 
 const SERIALPORTS_ROUTE = '/serialports';
-const CAPTUREFILES_ROUTE = '/capturefiles';
 
 class Server {
   constructor(config) {
@@ -15,13 +14,10 @@ class Server {
     const captureDirectory = config.capture.directory;
     const serialPorts = config.serialPorts;
     this.app = new App({
+      captureDirectory: captureDirectory,
       serialPorts: {
         names: Object.keys(serialPorts),
         route: SERIALPORTS_ROUTE
-      },
-      capture: {
-        directory: captureDirectory,
-        route: CAPTUREFILES_ROUTE
       },
       logger: logger
     });
