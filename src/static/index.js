@@ -66792,10 +66792,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var CaptureFile = function CaptureFile(_ref) {
-	  var capturefile = _ref.capturefile;
+	  var captureFile = _ref.captureFile;
 	  return _react2.default.createElement(
 	    'a',
-	    { href: capturefile },
+	    { href: captureFile },
 	    'download capture file'
 	  );
 	};

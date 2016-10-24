@@ -26,7 +26,7 @@ class App {
       res.json(config.serialPorts.names.reduce((memo, name) => {
         memo[name] = {
           socket: fullUrl + separator + name + '/socket',
-          capturefile: fullUrl + separator + name + '/capturefile'
+          captureFile: fullUrl + separator + name + '/capturefile'
         };
         return memo;
       }, {}));
