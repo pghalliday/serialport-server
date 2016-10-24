@@ -4,29 +4,33 @@ Expose serial ports over HTTP.
 
 ## Usage
 
-Create a JSON config file with the following contents
+```
+npm install -g serialport-server
+```
 
-```json
-{
-  "logger": {
-    "filename": "/path/to/log/file",
-    "level": "info"
+Create a JS config file with the following contents
+
+```javascript
+module.exports = {
+  logger: {
+    filename: '/path/to/log/file',
+    level: 'info'
   },
-  "capture": {
-    "directory": "/path/to/capture/directory"
+  capture: {
+    directory: '/path/to/capture/directory'
   },
-  "serialPorts": {
-    "name": {
-      "device": "/path/to/device",
-      "baudrate": 115200,
-      "retryPeriod": 1000
+  serialPorts: {
+    name: {
+      device: '/path/to/device',
+      baudrate: 115200,
+      retryPeriod: 1000
     },
     ...
   }
 }
 ```
 
-The start the server with
+Then start the server with
 
 ```
 serialport-server /path/to/config port

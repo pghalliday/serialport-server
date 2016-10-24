@@ -6,8 +6,8 @@
   "bin": "./bin/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack",
-		"watchBuild": "webpack --watch"
+    "build": "webpack",
+    "watchBuild": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
+    "hterm-umdjs": "^1.1.3",
     "webpack": "^1.13.2"
   }
 }
