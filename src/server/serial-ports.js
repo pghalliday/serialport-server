@@ -9,11 +9,11 @@ class SerialPorts {
     this.serialPorts = _.map(config.serialPorts, (options, name) => {
       const ioSerialPort = new IOSerialPort({
         io: config.io,
-        path: `${config.route}/${name}/socket`,
+        route: `${config.route}/${name}`,
         device: options.device,
-        baudrate: options.baudrate,
         retryPeriod: options.retryPeriod,
-        captureFile: path.resolve(config.captureDirectory, `${name}.cap`)
+        captureFile: path.resolve(config.captureDirectory, `${name}.log`),
+        options: options.options
       });
       ioSerialPort.on('log', event => {
         config.logger.log(event.level, `${name}: ${event.message}`);

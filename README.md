@@ -22,8 +22,10 @@ module.exports = {
   serialPorts: {
     name: {
       device: '/path/to/device',
-      baudrate: 115200,
-      retryPeriod: 1000
+      retryPeriod: 1000,
+      options {
+        baudrate: 115200
+      }
     },
     ...
   }

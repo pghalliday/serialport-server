@@ -25,15 +25,15 @@ class App {
       const separator = fullUrl.endsWith('/') ? '' : '/';
       res.json(config.serialPorts.names.reduce((memo, name) => {
         memo[name] = {
-          socket: fullUrl + separator + name + '/socket',
-          captureFile: fullUrl + separator + name + '/capturefile'
+          socket: fullUrl + separator + name,
+          captureFile: fullUrl + separator + name + '.log'
         };
         return memo;
       }, {}));
     });
     config.serialPorts.names.forEach(name => {
-      app.get(config.serialPorts.route + `/${name}/capturefile`, (req, res) => {
-        res.sendFile(path.resolve(config.captureDirectory, `${name}.cap`));
+      app.get(config.serialPorts.route + `/${name}.log`, (req, res) => {
+        res.sendFile(path.resolve(config.captureDirectory, `${name}.log`));
       });
     });
   }

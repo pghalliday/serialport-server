@@ -10,9 +10,11 @@ module.exports = {
   },
   serialPorts: {
     orangepi: {
-      device: '/dev/tty.usbserial-12345678',
-      baudrate: 115200,
-      retryPeriod: 1000
+      device: '/dev/tty.usbserial-A400YTOV',
+      retryPeriod: 1000,
+      options: {
+        baudrate: 115200
+      }
     }
   }
 }
