@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import fetch from 'isomorphic-fetch';
+import io from 'socket.io-client';
 
 export const FETCH_SERIALPORTS_ERROR = 'FETCH_SERIALPORTS_ERROR';
 function fetchSerialPortsError(error) {
@@ -29,7 +31,11 @@ export function fetchSerialPorts() {
     return fetch(`/serialports`)
     .then(response => response.json())
     .then(json => {
-      dispatch(receiveSerialPorts(json));
+      dispatch(receiveSerialPorts(_.mapValues(json, properties => {
+        return Object.assign({}, properties, {
+          socket: io(properties.socket)
+        });
+      })));
     })
     .catch(error => {
       dispatch(fetchSerialPortsError(error));
@@ -51,6 +57,28 @@ export function updateSize(name, columns, rows) {
   return {
     type: UPDATE_SIZE,
     name: name,
+    columns: columns,
+    rows: rows
+  };
+}
+
+export const SET_SIZE_WITH_EXPORT = 'SET_SIZE_WITH_EXPORT';
+export function setSizeWithExport(socket, columns, rows) {
+  socket.emit('data', `export COLUMNS=${columns} && export LINES=${rows}\n`);
+  return {
+    type: SET_SIZE_WITH_EXPORT,
+    socket: socket,
+    columns: columns,
+    rows: rows
+  };
+}
+
+export const SET_SIZE_WITH_STTY = 'SET_SIZE_WITH_STTY';
+export function setSizeWithStty(socket, columns, rows) {
+  socket.emit('data', `stty columns ${columns} && stty rows ${rows}\n`);
+  return {
+    type: SET_SIZE_WITH_STTY,
+    socket: socket,
     columns: columns,
     rows: rows
   };

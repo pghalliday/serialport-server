@@ -1,6 +1,5 @@
 import React, {PropTypes} from 'react';
 import {Component} from 'react';
-import io from 'socket.io-client';
 import {hterm} from 'hterm-umdjs';
 import {ab2str} from '../lib/utils';
 
@@ -9,18 +8,17 @@ class Terminal extends Component {
     const {socket, onStatus, onResize} = this.props;
     const terminal = new hterm.Terminal();
     terminal.onTerminalReady = () => {
-      const terminalIO = terminal.io.push();
-      const serialport = io(socket);
+      const io = terminal.io.push();
       const sendData = (data) => {
-        serialport.emit('data', data);
+        socket.emit('data', data);
       };
-      terminalIO.onVTKeystroke = sendData;
-      terminalIO.sendString = sendData;
-      terminalIO.onTerminalResize = onResize;
-      serialport.on('data', data => {
-        terminalIO.print(ab2str(data));
+      io.onVTKeystroke = sendData;
+      io.sendString = sendData;
+      io.onTerminalResize = onResize;
+      socket.on('data', data => {
+        io.print(ab2str(data));
       });
-      serialport.on('status', onStatus);
+      socket.on('status', onStatus);
     };
     terminal.decorate(this.terminalDiv);
     terminal.installKeyboard();
@@ -35,7 +33,7 @@ class Terminal extends Component {
 }
 
 Terminal.propTypes = {
-  socket: PropTypes.string.isRequired,
+  socket: PropTypes.object.isRequired,
   onStatus: PropTypes.func.isRequired,
   onResize: PropTypes.func.isRequired
 };

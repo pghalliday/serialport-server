@@ -2,16 +2,19 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import FetchSerialPortsError from './FetchSerialPortsError';
 import FetchingSerialPorts from './FetchingSerialPorts';
-import {Layout, Header, Navigation, Content} from 'react-mdl';
+import {Layout, Header, Navigation, Drawer, Content, Snackbar} from 'react-mdl';
 import {Link} from 'react-router';
 import Terminal from './Terminal';
-import StatusLine from './StatusLine';
 
 const visibleStyle = {
 };
 
 const hiddenStyle = {
   display: 'none'
+};
+
+const clickableStyle = {
+  cursor: 'pointer'
 };
 
 const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSizeWithStty, onSetSizeWithExport}) => {
@@ -23,9 +26,12 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSi
     const names = Object.keys(serialPorts.properties);
     activeSerialPort = activeSerialPort || names[0];
     const activeProperties = serialPorts.properties[activeSerialPort];
-    console.log(activeProperties);
+    const activeColumns = activeProperties.size.columns;
+    const activeRows = activeProperties.size.rows;
+    const activeStatus = activeProperties.status.status;
+    const activeSocket = activeProperties.socket;
     return (
-      <Layout>
+      <Layout fixedHeader>
         <Header title={activeSerialPort.toUpperCase()}>
           <Navigation>
             {_.map(names, name =>
@@ -33,10 +39,30 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSi
             )}
           </Navigation>
         </Header>
+        <Drawer title={activeSerialPort.toUpperCase()}>
+          <Navigation>
+            <a href={activeProperties.captureFile} target="_blank">
+              Download capture file
+            </a>
+            <span
+              style={clickableStyle}
+              onClick={onSetSizeWithExport.bind(null, activeSocket, activeColumns, activeRows)}
+            >
+              Set size to ({activeColumns},{activeRows}) using to export
+            </span>
+            <span
+              style={clickableStyle}
+              onClick={onSetSizeWithStty.bind(null, activeSocket, activeColumns, activeRows)}
+            >
+              Set size to ({activeColumns},{activeRows}) using stty
+            </span>
+          </Navigation>
+        </Drawer>
         <Content>
           {_.map(serialPorts.properties, (properties, name) =>
             <div key={name} style={activeSerialPort === name ? visibleStyle : hiddenStyle}>
               <Terminal
+                name={name}
                 socket={properties.socket}
                 onStatus={onStatus.bind(null, name)}
                 onResize={onResize.bind(null, name)}
@@ -44,13 +70,9 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSi
             </div>
           )}
         </Content>
-        <StatusLine
-          status={activeProperties.status}
-          captureFile={activeProperties.captureFile}
-          terminalSize={activeProperties.size}
-          onSetSizeWithExport={onSetSizeWithExport.bind(null, activeSerialPort)}
-          onSetSizeWithStty={onSetSizeWithStty.bind(null, activeSerialPort)}
-        />
+        <Snackbar active={activeStatus !== 'open'}>
+					Disconnected: attempting to reconnect...
+				</Snackbar>
       </Layout>
     );
   } else {

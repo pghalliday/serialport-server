@@ -18,11 +18,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     onResize: (name, columns, rows) => {
       dispatch(updateSize(name, columns, rows));
     },
-    onSetSizeWithStty: name => {
-      dispatch(setSizeWithStty(name));
+    onSetSizeWithStty: (socket, columns, rows) => {
+      dispatch(setSizeWithStty(socket, columns, rows));
     },
-    onSetSizeWithExport: name => {
-      dispatch(setSizeWithExport(name));
+    onSetSizeWithExport: (socket, columns, rows) => {
+      dispatch(setSizeWithExport(socket, columns, rows));
     }
   };
 };

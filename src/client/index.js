@@ -23,7 +23,10 @@ const store = createStore(
   )
 );
 
+// Set the default storage
 hterm.defaultStorage = new lib.Storage.Local();
+// Hack to disable the size overlay (doesn't render correctly anyway)
+hterm.Terminal.prototype.overlaySize = function () {};
 
 store.dispatch(fetchSerialPorts());
 
