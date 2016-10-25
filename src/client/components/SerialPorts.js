@@ -2,9 +2,10 @@ import _ from 'lodash';
 import React, {PropTypes} from 'react';
 import FetchSerialPortsError from './FetchSerialPortsError';
 import FetchingSerialPorts from './FetchingSerialPorts';
-import SerialPort from './SerialPort';
-import {Tabs, Tab} from 'react-mdl';
+import {Layout, Header, Navigation, Content} from 'react-mdl';
 import {Link} from 'react-router';
+import Terminal from './Terminal';
+import StatusLine from './StatusLine';
 
 const visibleStyle = {
 };
@@ -21,29 +22,34 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
   } else if (!_.isUndefined(serialPorts.properties)) {
     const names = Object.keys(serialPorts.properties);
     activeSerialPort = activeSerialPort || names[0];
-    const activeTab = _.indexOf(names, activeSerialPort);
+    const activeProperties = serialPorts.properties[activeSerialPort];
+    console.log(activeProperties);
     return (
-      <div>
-        <Tabs ripple activeTab={activeTab}>
-          {_.map(serialPorts.properties, (properties, name) =>
-            <Tab key={name} component={Link} to={`/serialports/${name}`}>
-              {name}
-            </Tab>
-          )}
-        </Tabs>
-        <section>
+      <Layout>
+        <Header title={activeSerialPort.toUpperCase()}>
+          <Navigation>
+            {_.map(_.filter(names, name => name !== activeSerialPort), name =>
+              <Link key={name} to={`/serialports/${name}`}>{name}</Link>
+            )}
+          </Navigation>
+        </Header>
+        <Content>
           {_.map(serialPorts.properties, (properties, name) =>
             <div key={name} style={activeSerialPort === name ? visibleStyle : hiddenStyle}>
-              <SerialPort
-                name={name}
-                properties={properties}
+              <Terminal
+                socket={properties.socket}
                 onStatus={onStatus.bind(null, name)}
                 onResize={onResize.bind(null, name)}
               />
             </div>
           )}
-        </section>
-      </div>
+        </Content>
+        <StatusLine
+          status={activeProperties.status}
+          captureFile={activeProperties.captureFile}
+          terminalSize={activeProperties.size}
+        />
+      </Layout>
     );
   } else {
     return (

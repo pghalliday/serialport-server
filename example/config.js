@@ -22,6 +22,13 @@ module.exports = {
       options: {
         baudrate: 115200
       }
+    },
+    port3: {
+      device: '/dev/tty.usbserial-A100AVYN',
+      retryPeriod: 1000,
+      options: {
+        baudrate: 115200
+      }
     }
   }
 }

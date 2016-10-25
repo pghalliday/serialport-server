@@ -1,9 +1,9 @@
 import React, {PropTypes} from 'react';
 
 const Status = ({status}) => (
-  <p>
+  <span>
     {JSON.stringify(status)}
-  </p>
+  </span>
 );
 
 Status.propTypes = {

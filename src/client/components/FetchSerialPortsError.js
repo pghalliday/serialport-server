@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react';
 const FetchSerialPortsError = ({error}) => (
   <div>
     <p>
-      Error encontered loading serial ports
+      Error encountered loading serial ports
     </p>
     <p>
       {JSON.stringify(error)}
