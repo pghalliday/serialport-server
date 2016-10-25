@@ -3,7 +3,8 @@ import React, {PropTypes} from 'react';
 import FetchSerialPortsError from './FetchSerialPortsError';
 import FetchingSerialPorts from './FetchingSerialPorts';
 import SerialPort from './SerialPort';
-import Name from './Name';
+import {Tabs, Tab} from 'react-mdl';
+import {Link} from 'react-router';
 
 const visibleStyle = {
 };
@@ -18,19 +19,19 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
       <FetchSerialPortsError error={serialPorts.error} />
     );
   } else if (!_.isUndefined(serialPorts.properties)) {
-    activeSerialPort = activeSerialPort || Object.keys(serialPorts.properties)[0];
+    const names = Object.keys(serialPorts.properties);
+    activeSerialPort = activeSerialPort || names[0];
+    const activeTab = _.indexOf(names, activeSerialPort);
     return (
       <div>
-        <div>
+        <Tabs ripple activeTab={activeTab}>
           {_.map(serialPorts.properties, (properties, name) =>
-            <Name
-              key={name}
-              name={name}
-              active={activeSerialPort === name}
-            />
+            <Tab key={name} component={Link} to={`/serialports/${name}`}>
+              {name}
+            </Tab>
           )}
-        </div>
-        <div>
+        </Tabs>
+        <section>
           {_.map(serialPorts.properties, (properties, name) =>
             <div key={name} style={activeSerialPort === name ? visibleStyle : hiddenStyle}>
               <SerialPort
@@ -41,7 +42,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
               />
             </div>
           )}
-        </div>
+        </section>
       </div>
     );
   } else {
@@ -52,6 +53,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
 };
 
 SerialPorts.propTypes = {
+  activeSerialPort: PropTypes.string,
   serialPorts: PropTypes.objectOf(
     PropTypes.oneOfType([
       PropTypes.shape({

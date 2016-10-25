@@ -11,13 +11,13 @@ import {
 function serialPorts(state = {}, action) {
   switch (action.type) {
     case FETCH_SERIALPORTS_ERROR:
-      return {
+      return Object.assign({}, state, {
         error: action.error
-      };
+      });
     case REQUEST_SERIALPORTS:
       return {};
     case RECEIVE_SERIALPORTS:
-      return {
+      return Object.assign({}, state, {
         properties: _.mapValues(action.serialPorts, properties => {
           return Object.assign({}, properties, {
             status: {
@@ -29,7 +29,7 @@ function serialPorts(state = {}, action) {
             }
           });
         })
-      };
+      });
     case UPDATE_STATUS:
       return Object.assign({}, state, {
         properties: Object.assign({}, state.properties, {

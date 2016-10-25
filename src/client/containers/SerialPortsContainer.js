@@ -13,10 +13,10 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onStatus: (name, status) => {
-      dispatch(updateStatus(name, status))
+      dispatch(updateStatus(name, status));
     },
     onResize: (name, columns, rows) => {
-      dispatch(updateSize(name, columns, rows))
+      dispatch(updateSize(name, columns, rows));
     }
   };
 };
