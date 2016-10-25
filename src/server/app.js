@@ -6,7 +6,7 @@ const path = require('path');
 
 const staticDir = path.resolve(__dirname, '..', 'static');
 const indexHtml = path.join(staticDir, 'index.html');
-const indexJs = path.join(staticDir, 'index.js');
+const jsDir = path.join(staticDir, 'js');
 
 function promiseCallback(resolve, reject) {
   return function(error, value) {
@@ -23,7 +23,7 @@ class App {
     this.logger = config.logger;
     const app = express();
     this.server = new http.Server(app);
-    app.use('/js', express.static('src/static/js'));
+    app.use('/js', express.static(jsDir));
     app.get(config.serialPorts.route, (req, res) => {
       const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
       const separator = fullUrl.endsWith('/') ? '' : '/';
