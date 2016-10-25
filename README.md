@@ -38,7 +38,7 @@ Then start the server with
 serialport-server /path/to/config port
 ```
 
-Capture files will be created at `/path/to/capture/directory/name.cap` and will be downloadable from `http://localhost:port/capturefiles/name.cap`.
+Capture files will be created at `/path/to/capture/directory/name.log` and will be downloadable from `http://localhost:port/serialports/name.log`.
 
 Socket.IO sockets for each serial port will be exposed at `http://localhost:port/serialports/name`. See [socket.io-serialport](https://github.com/pghalliday/socket.io-serialport) for the interface.
 
