@@ -48,7 +48,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSi
               style={clickableStyle}
               onClick={onSetSizeWithExport.bind(null, activeSocket, activeColumns, activeRows)}
             >
-              Set size to ({activeColumns},{activeRows}) using to export
+              Set size to ({activeColumns},{activeRows}) using export
             </span>
             <span
               style={clickableStyle}

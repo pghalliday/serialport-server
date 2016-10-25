@@ -29079,7 +29079,7 @@
 	            activeColumns,
 	            ',',
 	            activeRows,
-	            ') using to export'
+	            ') using export'
 	          ),
 	          _react2.default.createElement(
 	            'span',
