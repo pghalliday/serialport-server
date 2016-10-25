@@ -28981,6 +28981,12 @@
 	    },
 	    onResize: function onResize(name, columns, rows) {
 	      dispatch((0, _actions.updateSize)(name, columns, rows));
+	    },
+	    onSetSizeWithStty: function onSetSizeWithStty(name) {
+	      dispatch((0, _actions.setSizeWithStty)(name));
+	    },
+	    onSetSizeWithExport: function onSetSizeWithExport(name) {
+	      dispatch((0, _actions.setSizeWithExport)(name));
 	    }
 	  };
 	};
@@ -29040,6 +29046,8 @@
 	  var activeSerialPort = _ref.activeSerialPort;
 	  var onStatus = _ref.onStatus;
 	  var onResize = _ref.onResize;
+	  var onSetSizeWithStty = _ref.onSetSizeWithStty;
+	  var onSetSizeWithExport = _ref.onSetSizeWithExport;
 
 	  if (!_lodash2.default.isUndefined(serialPorts.error)) {
 	    return _react2.default.createElement(_FetchSerialPortsError2.default, { error: serialPorts.error });
@@ -29057,9 +29065,7 @@
 	        _react2.default.createElement(
 	          _reactMdl.Navigation,
 	          null,
-	          _lodash2.default.map(_lodash2.default.filter(names, function (name) {
-	            return name !== activeSerialPort;
-	          }), function (name) {
+	          _lodash2.default.map(names, function (name) {
 	            return _react2.default.createElement(
 	              _reactRouter.Link,
 	              { key: name, to: '/serialports/' + name },
@@ -29086,7 +29092,9 @@
 	      _react2.default.createElement(_StatusLine2.default, {
 	        status: activeProperties.status,
 	        captureFile: activeProperties.captureFile,
-	        terminalSize: activeProperties.size
+	        terminalSize: activeProperties.size,
+	        onSetSizeWithExport: onSetSizeWithExport.bind(null, activeSerialPort),
+	        onSetSizeWithStty: onSetSizeWithStty.bind(null, activeSerialPort)
 	      })
 	    );
 	  } else {
@@ -29112,7 +29120,9 @@
 	    error: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.object]).isRequired
 	  }), _react.PropTypes.shape({})])).isRequired,
 	  onStatus: _react.PropTypes.func.isRequired,
-	  onResize: _react.PropTypes.func.isRequired
+	  onResize: _react.PropTypes.func.isRequired,
+	  onSetSizeWithStty: _react.PropTypes.func.isRequired,
+	  onSetSizeWithExport: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = SerialPorts;
@@ -83515,23 +83525,21 @@
 	  var status = _ref.status;
 	  var captureFile = _ref.captureFile;
 	  var terminalSize = _ref.terminalSize;
+	  var onSetSizeWithExport = _ref.onSetSizeWithExport;
+	  var onSetSizeWithStty = _ref.onSetSizeWithStty;
 	  return _react2.default.createElement(
 	    _reactMdl.Footer,
-	    { size: 'mini' },
+	    { size: 'mega' },
 	    _react2.default.createElement(
 	      _reactMdl.FooterSection,
-	      { type: 'left', logo: 'status' },
+	      { type: 'middle' },
+	      _react2.default.createElement(_TerminalSize2.default, {
+	        terminalSize: terminalSize,
+	        onSetSizeWithStty: onSetSizeWithStty,
+	        onSetSizeWithExport: onSetSizeWithExport
+	      }),
+	      _react2.default.createElement(_CaptureFile2.default, { captureFile: captureFile }),
 	      _react2.default.createElement(_Status2.default, { status: status })
-	    ),
-	    _react2.default.createElement(
-	      _reactMdl.FooterSection,
-	      { type: 'right' },
-	      _react2.default.createElement(_TerminalSize2.default, { terminalSize: terminalSize })
-	    ),
-	    _react2.default.createElement(
-	      _reactMdl.FooterSection,
-	      { type: 'right' },
-	      _react2.default.createElement(_CaptureFile2.default, { captureFile: captureFile })
 	    )
 	  );
 	};
@@ -83545,7 +83553,9 @@
 	    columns: _react.PropTypes.number.isRequired,
 	    rows: _react.PropTypes.number.isRequired
 	  }).isRequired,
-	  captureFile: _react.PropTypes.string.isRequired
+	  captureFile: _react.PropTypes.string.isRequired,
+	  onSetSizeWithStty: _react.PropTypes.func.isRequired,
+	  onSetSizeWithExport: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = StatusLine;
@@ -83564,14 +83574,29 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactMdl = __webpack_require__(220);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Status = function Status(_ref) {
 	  var status = _ref.status;
 	  return _react2.default.createElement(
-	    'span',
-	    null,
-	    JSON.stringify(status)
+	    _reactMdl.FooterDropDownSection,
+	    { title: 'Status' },
+	    _react2.default.createElement(
+	      _reactMdl.FooterLinkList,
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        status.status
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        null,
+	        status.error
+	      )
+	    )
 	  );
 	};
 
@@ -83605,12 +83630,16 @@
 	var CaptureFile = function CaptureFile(_ref) {
 	  var captureFile = _ref.captureFile;
 	  return _react2.default.createElement(
-	    _reactMdl.FooterLinkList,
-	    null,
+	    _reactMdl.FooterDropDownSection,
+	    { title: 'Capture File' },
 	    _react2.default.createElement(
-	      'a',
-	      { href: captureFile, target: '_blank' },
-	      'Download Capture File'
+	      _reactMdl.FooterLinkList,
+	      null,
+	      _react2.default.createElement(
+	        'a',
+	        { href: captureFile, target: '_blank' },
+	        'Download'
+	      )
 	    )
 	  );
 	};
@@ -83635,14 +83664,35 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactMdl = __webpack_require__(220);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var clickableStyle = {
+	  cursor: 'pointer'
+	};
 
 	var TerminalSize = function TerminalSize(_ref) {
 	  var terminalSize = _ref.terminalSize;
+	  var onSetSizeWithStty = _ref.onSetSizeWithStty;
+	  var onSetSizeWithExport = _ref.onSetSizeWithExport;
 	  return _react2.default.createElement(
-	    'text',
-	    null,
-	    JSON.stringify(terminalSize)
+	    _reactMdl.FooterDropDownSection,
+	    { title: 'Terminal Size (' + terminalSize.columns + ',' + terminalSize.rows + ')' },
+	    _react2.default.createElement(
+	      _reactMdl.FooterLinkList,
+	      null,
+	      _react2.default.createElement(
+	        'span',
+	        { style: clickableStyle, onClick: onSetSizeWithExport },
+	        'Set using export'
+	      ),
+	      _react2.default.createElement(
+	        'span',
+	        { style: clickableStyle, onClick: onSetSizeWithStty },
+	        'Set using stty'
+	      )
+	    )
 	  );
 	};
 
@@ -83650,7 +83700,9 @@
 	  terminalSize: _react.PropTypes.shape({
 	    columns: _react.PropTypes.number.isRequired,
 	    rows: _react.PropTypes.number.isRequired
-	  }).isRequired
+	  }).isRequired,
+	  onSetSizeWithStty: _react.PropTypes.func.isRequired,
+	  onSetSizeWithExport: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = TerminalSize;

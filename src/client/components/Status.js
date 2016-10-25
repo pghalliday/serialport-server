@@ -1,9 +1,13 @@
 import React, {PropTypes} from 'react';
+import {FooterLinkList, FooterDropDownSection} from 'react-mdl';
 
 const Status = ({status}) => (
-  <span>
-    {JSON.stringify(status)}
-  </span>
+  <FooterDropDownSection title="Status">
+    <FooterLinkList>
+      <span>{status.status}</span>
+      <span>{status.error}</span>
+    </FooterLinkList>
+  </FooterDropDownSection>
 );
 
 Status.propTypes = {

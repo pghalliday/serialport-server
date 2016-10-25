@@ -14,7 +14,7 @@ const hiddenStyle = {
   display: 'none'
 };
 
-const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
+const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSizeWithStty, onSetSizeWithExport}) => {
   if (!_.isUndefined(serialPorts.error)) {
     return (
       <FetchSerialPortsError error={serialPorts.error} />
@@ -28,7 +28,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
       <Layout>
         <Header title={activeSerialPort.toUpperCase()}>
           <Navigation>
-            {_.map(_.filter(names, name => name !== activeSerialPort), name =>
+            {_.map(names, name =>
               <Link key={name} to={`/serialports/${name}`}>{name}</Link>
             )}
           </Navigation>
@@ -48,6 +48,8 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize}) => {
           status={activeProperties.status}
           captureFile={activeProperties.captureFile}
           terminalSize={activeProperties.size}
+          onSetSizeWithExport={onSetSizeWithExport.bind(null, activeSerialPort)}
+          onSetSizeWithStty={onSetSizeWithStty.bind(null, activeSerialPort)}
         />
       </Layout>
     );
@@ -88,7 +90,9 @@ SerialPorts.propTypes = {
     ])
   ).isRequired,
   onStatus: PropTypes.func.isRequired,
-  onResize: PropTypes.func.isRequired
+  onResize: PropTypes.func.isRequired,
+  onSetSizeWithStty: PropTypes.func.isRequired,
+  onSetSizeWithExport: PropTypes.func.isRequired
 };
 
 export default SerialPorts;

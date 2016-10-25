@@ -1,12 +1,14 @@
 import React, {PropTypes} from 'react';
-import {FooterLinkList} from 'react-mdl';
+import {FooterLinkList, FooterDropDownSection} from 'react-mdl';
 
 const CaptureFile = ({captureFile}) => (
-  <FooterLinkList>
-    <a href={captureFile} target="_blank">
-      Download Capture File
-    </a>
-  </FooterLinkList>
+  <FooterDropDownSection title="Capture File">
+    <FooterLinkList>
+      <a href={captureFile} target="_blank">
+        Download
+      </a>
+    </FooterLinkList>
+  </FooterDropDownSection>
 );
 
 CaptureFile.propTypes = {

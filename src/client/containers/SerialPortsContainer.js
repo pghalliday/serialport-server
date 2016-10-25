@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import SerialPorts from '../components/SerialPorts';
-import {updateStatus, updateSize} from '../actions';
+import {updateStatus, updateSize, setSizeWithStty, setSizeWithExport} from '../actions';
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -17,6 +17,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     onResize: (name, columns, rows) => {
       dispatch(updateSize(name, columns, rows));
+    },
+    onSetSizeWithStty: name => {
+      dispatch(setSizeWithStty(name));
+    },
+    onSetSizeWithExport: name => {
+      dispatch(setSizeWithExport(name));
     }
   };
 };
