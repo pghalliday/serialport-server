@@ -30,16 +30,22 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
     const activeRows = activeProperties.size.rows;
     const activeStatus = activeProperties.status.status;
     const activeSocket = activeProperties.socket;
+    const activeTheme = activeProperties.theme;
+    const activeStyle = {
+      backgroundColor: activeTheme.bgcolor,
+      color: activeTheme.fgcolor
+    };
+    const activeTitle = activeSerialPort.toUpperCase();
     return (
       <Layout fixedHeader>
-        <Header title={activeSerialPort.toUpperCase()}>
+        <Header title={activeTitle} style={activeStyle}>
           <Navigation>
             {_.map(names, name =>
               <Link key={name} to={`/serialports/${name}`}>{name}</Link>
             )}
           </Navigation>
         </Header>
-        <Drawer title={activeSerialPort.toUpperCase()}>
+        <Drawer title={activeTitle}>
           <Navigation>
             <a href={activeProperties.captureFile} target="_blank">
               Download capture file

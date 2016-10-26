@@ -1,6 +1,6 @@
 {
   "name": "serialport-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Expose serial ports over HTTP",
   "main": "index.js",
   "bin": "./bin/index.js",

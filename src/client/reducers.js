@@ -8,6 +8,8 @@ import {
   UPDATE_SIZE
 } from './actions';
 
+import {headers as headerThemes} from './lib/themes';
+
 function serialPorts(state = {}, action) {
   switch (action.type) {
     case FETCH_SERIALPORTS_ERROR:
@@ -17,18 +19,29 @@ function serialPorts(state = {}, action) {
     case REQUEST_SERIALPORTS:
       return {};
     case RECEIVE_SERIALPORTS:
+      const serialPorts = action.serialPorts;
       return Object.assign({}, state, {
-        properties: _.mapValues(action.serialPorts, properties => {
-          return Object.assign({}, properties, {
-            status: {
-              status: 'waitingOnSocket'
-            },
-            size: {
-              columns: 0,
-              rows: 0
+        properties: _.zipObject(
+          Object.keys(serialPorts),
+          _.zipWith(
+            Object.values(serialPorts),
+            headerThemes,
+            (properties, theme) => {
+              console.log(properties);
+              console.log(theme);
+              return Object.assign({}, properties, {
+                status: {
+                  status: 'waitingOnSocket'
+                },
+                size: {
+                  columns: 0,
+                  rows: 0
+                },
+                theme: theme
+              });
             }
-          });
-        })
+          )
+        )
       });
     case UPDATE_STATUS:
       return Object.assign({}, state, {
