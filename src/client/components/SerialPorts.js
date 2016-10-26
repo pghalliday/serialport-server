@@ -17,7 +17,7 @@ const clickableStyle = {
   cursor: 'pointer'
 };
 
-const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSizeWithStty, onSetSizeWithExport}) => {
+const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty, onSetSizeWithExport}) => {
   if (!_.isUndefined(serialPorts.error)) {
     return (
       <FetchSerialPortsError error={serialPorts.error} />
@@ -64,7 +64,6 @@ const SerialPorts = ({serialPorts, activeSerialPort, onStatus, onResize, onSetSi
               <Terminal
                 name={name}
                 socket={properties.socket}
-                onStatus={onStatus.bind(null, name)}
                 onResize={onResize.bind(null, name)}
               />
             </div>
@@ -111,7 +110,6 @@ SerialPorts.propTypes = {
       PropTypes.shape({})
     ])
   ).isRequired,
-  onStatus: PropTypes.func.isRequired,
   onResize: PropTypes.func.isRequired,
   onSetSizeWithStty: PropTypes.func.isRequired,
   onSetSizeWithExport: PropTypes.func.isRequired

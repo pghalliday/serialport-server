@@ -24,6 +24,7 @@ class App {
     const app = express();
     this.server = new http.Server(app);
     app.use('/js', express.static(jsDir));
+    app.use(config.serialPorts.route, express.static(config.captureDirectory));
     app.get(config.serialPorts.route, (req, res) => {
       const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
       const separator = fullUrl.endsWith('/') ? '' : '/';
@@ -34,11 +35,6 @@ class App {
         };
         return memo;
       }, {}));
-    });
-    config.serialPorts.names.forEach(name => {
-      app.get(config.serialPorts.route + `/${name}.log`, (req, res) => {
-        res.sendFile(path.resolve(config.captureDirectory, `${name}.log`));
-      });
     });
 		app.get('/*', (req,res) => {
 			res.sendFile(indexHtml);

@@ -5,7 +5,7 @@ import {ab2str} from '../lib/utils';
 
 class Terminal extends Component {
   componentDidMount() {
-    const {socket, onStatus, onResize} = this.props;
+    const {socket, onResize} = this.props;
     const terminal = new hterm.Terminal();
     terminal.onTerminalReady = () => {
       const io = terminal.io.push();
@@ -18,7 +18,6 @@ class Terminal extends Component {
       socket.on('data', data => {
         io.print(ab2str(data));
       });
-      socket.on('status', onStatus);
     };
     terminal.decorate(this.terminalDiv);
     terminal.installKeyboard();
@@ -34,7 +33,6 @@ class Terminal extends Component {
 
 Terminal.propTypes = {
   socket: PropTypes.object.isRequired,
-  onStatus: PropTypes.func.isRequired,
   onResize: PropTypes.func.isRequired
 };
 

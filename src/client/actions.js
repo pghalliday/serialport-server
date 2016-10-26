@@ -31,9 +31,13 @@ export function fetchSerialPorts() {
     return fetch(`/serialports`)
     .then(response => response.json())
     .then(json => {
-      dispatch(receiveSerialPorts(_.mapValues(json, properties => {
+      dispatch(receiveSerialPorts(_.mapValues(json, (properties, name) => {
+        const socket = io(properties.socket);
+        socket.on('status', status => {
+          dispatch(updateStatus(name, status));
+        });
         return Object.assign({}, properties, {
-          socket: io(properties.socket)
+          socket: socket
         });
       })));
     })
