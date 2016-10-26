@@ -17,6 +17,8 @@ const clickableStyle = {
   cursor: 'pointer'
 };
 
+const MAX_TIMEOUT = 2147483647;
+
 const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty, onSetSizeWithExport}) => {
   if (!_.isUndefined(serialPorts.error)) {
     return (
@@ -30,6 +32,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
     const activeColumns = activeProperties.size.columns;
     const activeRows = activeProperties.size.rows;
     const activeStatus = activeProperties.status.status;
+    const activeSocketStatus = activeProperties.socketStatus.status;
     const activeSocket = activeProperties.socket;
     const activeTheme = activeProperties.theme;
     const activeStyle = {
@@ -37,6 +40,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
       color: activeTheme.fgcolor
     };
     const activeTitle = activeSerialPort.toUpperCase();
+    const disconnected = activeSocketStatus !== 'connected' || activeStatus !== 'open';
     return (
       <Layout fixedHeader>
         <Header title={activeTitle} style={activeStyle}>
@@ -76,7 +80,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
             </div>
           )}
         </Content>
-        <Snackbar active={activeStatus !== 'open'} onTimeout={() => {}}>
+        <Snackbar timeout={MAX_TIMEOUT} active={disconnected} onTimeout={() => {}}>
 					Disconnected: attempting to reconnect...
 				</Snackbar>
       </Layout>

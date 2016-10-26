@@ -4,6 +4,7 @@ import {
   FETCH_SERIALPORTS_ERROR,
   REQUEST_SERIALPORTS,
   RECEIVE_SERIALPORTS,
+  UPDATE_SOCKET_STATUS,
   UPDATE_STATUS,
   UPDATE_SIZE
 } from './actions';
@@ -28,6 +29,9 @@ function serialPorts(state = {}, action) {
             headerThemes,
             (properties, theme) => {
               return Object.assign({}, properties, {
+                socketStatus: {
+                  status: 'disconnected'
+                },
                 status: {
                   status: 'waitingOnSocket'
                 },
@@ -40,6 +44,14 @@ function serialPorts(state = {}, action) {
             }
           )
         )
+      });
+    case UPDATE_SOCKET_STATUS:
+      return Object.assign({}, state, {
+        properties: Object.assign({}, state.properties, {
+          [action.name]: Object.assign({}, state.properties[action.name], {
+            socketStatus: action.status
+          })
+        })
       });
     case UPDATE_STATUS:
       return Object.assign({}, state, {

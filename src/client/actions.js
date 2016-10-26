@@ -36,6 +36,27 @@ export function fetchSerialPorts() {
         socket.on('status', status => {
           dispatch(updateStatus(name, status));
         });
+        socket.on('connect', () => {
+          dispatch(updateSocketStatus(name, {
+            status: 'connected'
+          }));
+        });
+        socket.on('reconnect', () => {
+          dispatch(updateSocketStatus(name, {
+            status: 'connected'
+          }));
+        });
+        socket.on('disconnect', () => {
+          dispatch(updateSocketStatus(name, {
+            status: 'disconnected'
+          }));
+        });
+        socket.on('error', error => {
+          dispatch(updateSocketStatus(name, {
+            status: 'error',
+            error: error
+          }));
+        });
         return Object.assign({}, properties, {
           socket: socket
         });
@@ -44,6 +65,15 @@ export function fetchSerialPorts() {
     .catch(error => {
       dispatch(fetchSerialPortsError(error));
     });
+  };
+}
+
+export const UPDATE_SOCKET_STATUS = 'UPDATE_SOCKET_STATUS';
+export function updateSocketStatus(name, status) {
+  return {
+    type: UPDATE_SOCKET_STATUS,
+    name: name,
+    status: status
   };
 }
 

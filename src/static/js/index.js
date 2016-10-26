@@ -6384,8 +6384,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.SET_SIZE_WITH_STTY = exports.SET_SIZE_WITH_EXPORT = exports.UPDATE_SIZE = exports.UPDATE_STATUS = exports.RECEIVE_SERIALPORTS = exports.REQUEST_SERIALPORTS = exports.FETCH_SERIALPORTS_ERROR = undefined;
+	exports.SET_SIZE_WITH_STTY = exports.SET_SIZE_WITH_EXPORT = exports.UPDATE_SIZE = exports.UPDATE_STATUS = exports.UPDATE_SOCKET_STATUS = exports.RECEIVE_SERIALPORTS = exports.REQUEST_SERIALPORTS = exports.FETCH_SERIALPORTS_ERROR = undefined;
 	exports.fetchSerialPorts = fetchSerialPorts;
+	exports.updateSocketStatus = updateSocketStatus;
 	exports.updateStatus = updateStatus;
 	exports.updateSize = updateSize;
 	exports.setSizeWithExport = setSizeWithExport;
@@ -6439,6 +6440,27 @@
 	        socket.on('status', function (status) {
 	          dispatch(updateStatus(name, status));
 	        });
+	        socket.on('connect', function () {
+	          dispatch(updateSocketStatus(name, {
+	            status: 'connected'
+	          }));
+	        });
+	        socket.on('reconnect', function () {
+	          dispatch(updateSocketStatus(name, {
+	            status: 'connected'
+	          }));
+	        });
+	        socket.on('disconnect', function () {
+	          dispatch(updateSocketStatus(name, {
+	            status: 'disconnected'
+	          }));
+	        });
+	        socket.on('error', function (error) {
+	          dispatch(updateSocketStatus(name, {
+	            status: 'error',
+	            error: error
+	          }));
+	        });
 	        return Object.assign({}, properties, {
 	          socket: socket
 	        });
@@ -6446,6 +6468,15 @@
 	    }).catch(function (error) {
 	      dispatch(fetchSerialPortsError(error));
 	    });
+	  };
+	}
+
+	var UPDATE_SOCKET_STATUS = exports.UPDATE_SOCKET_STATUS = 'UPDATE_SOCKET_STATUS';
+	function updateSocketStatus(name, status) {
+	  return {
+	    type: UPDATE_SOCKET_STATUS,
+	    name: name,
+	    status: status
 	  };
 	}
 
@@ -6975,6 +7006,9 @@
 	      return Object.assign({}, state, {
 	        properties: _.zipObject(Object.keys(_serialPorts), _.zipWith(Object.values(_serialPorts), _themes.headers, function (properties, theme) {
 	          return Object.assign({}, properties, {
+	            socketStatus: {
+	              status: 'disconnected'
+	            },
 	            status: {
 	              status: 'waitingOnSocket'
 	            },
@@ -6985,6 +7019,12 @@
 	            theme: theme
 	          });
 	        }))
+	      });
+	    case _actions.UPDATE_SOCKET_STATUS:
+	      return Object.assign({}, state, {
+	        properties: Object.assign({}, state.properties, _defineProperty({}, action.name, Object.assign({}, state.properties[action.name], {
+	          socketStatus: action.status
+	        })))
 	      });
 	    case _actions.UPDATE_STATUS:
 	      return Object.assign({}, state, {
@@ -29029,6 +29069,8 @@
 	  cursor: 'pointer'
 	};
 
+	var MAX_TIMEOUT = 2147483647;
+
 	var SerialPorts = function SerialPorts(_ref) {
 	  var serialPorts = _ref.serialPorts;
 	  var activeSerialPort = _ref.activeSerialPort;
@@ -29046,6 +29088,7 @@
 	    var activeColumns = activeProperties.size.columns;
 	    var activeRows = activeProperties.size.rows;
 	    var activeStatus = activeProperties.status.status;
+	    var activeSocketStatus = activeProperties.socketStatus.status;
 	    var activeSocket = activeProperties.socket;
 	    var activeTheme = activeProperties.theme;
 	    var activeStyle = {
@@ -29053,6 +29096,7 @@
 	      color: activeTheme.fgcolor
 	    };
 	    var activeTitle = activeSerialPort.toUpperCase();
+	    var disconnected = activeSocketStatus !== 'connected' || activeStatus !== 'open';
 	    return _react2.default.createElement(
 	      _reactMdl.Layout,
 	      { fixedHeader: true },
@@ -29125,7 +29169,7 @@
 	      ),
 	      _react2.default.createElement(
 	        _reactMdl.Snackbar,
-	        { active: activeStatus !== 'open', onTimeout: function onTimeout() {} },
+	        { timeout: MAX_TIMEOUT, active: disconnected, onTimeout: function onTimeout() {} },
 	        'Disconnected: attempting to reconnect...'
 	      )
 	    );
