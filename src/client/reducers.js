@@ -27,8 +27,6 @@ function serialPorts(state = {}, action) {
             Object.values(serialPorts),
             headerThemes,
             (properties, theme) => {
-              console.log(properties);
-              console.log(theme);
               return Object.assign({}, properties, {
                 status: {
                   status: 'waitingOnSocket'

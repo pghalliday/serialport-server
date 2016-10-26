@@ -25,6 +25,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
   } else if (!_.isUndefined(serialPorts.properties)) {
     const names = Object.keys(serialPorts.properties);
     activeSerialPort = activeSerialPort || names[0];
+    document.title = activeSerialPort
     const activeProperties = serialPorts.properties[activeSerialPort];
     const activeColumns = activeProperties.size.columns;
     const activeRows = activeProperties.size.rows;
