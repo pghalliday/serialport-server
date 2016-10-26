@@ -69,7 +69,7 @@ const SerialPorts = ({serialPorts, activeSerialPort, onResize, onSetSizeWithStty
             </div>
           )}
         </Content>
-        <Snackbar active={activeStatus !== 'open'}>
+        <Snackbar active={activeStatus !== 'open'} onTimeout={() => {}}>
 					Disconnected: attempting to reconnect...
 				</Snackbar>
       </Layout>
