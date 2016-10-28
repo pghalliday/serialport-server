@@ -1,6 +1,6 @@
 {
   "name": "serialport-server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Expose serial ports over HTTP",
   "main": "index.js",
   "bin": "./bin/index.js",
@@ -30,7 +30,7 @@
     "express": "^4.14.0",
     "lodash": "^4.16.4",
     "socket.io": "^1.5.1",
-    "socket.io-serialport": "^2.0.0",
+    "socket.io-serialport": "^2.0.1",
     "winston": "^2.2.0"
   },
   "devDependencies": {
